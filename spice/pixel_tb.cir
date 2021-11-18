@@ -1,0 +1,21 @@
+.include ../../models/ptm_130_ngspice.spi
+.option TNOM=27 GMIN=1e-20
+
+v1 1 0 dc 1.2
+v2 exp 0 pulse (0 1.2 0.5u 0 0 5u 15u)
+v3 rst 0 pulse (0 1.2 0 0 0 0.5u 15u)
+v4 vpx 0 pulse (0.2 1 0 0 0 15u 30u)
+
+.include ./pixel.cir
+
+x1 1 rst exp vpx 0 pout pixel
+
+.control
+
+tran 10n 30u
+plot v(rst) v(exp) v(pout) v(vpx)
+
+wrdata out.csv v(rst) v(exp) v(pout) v(vpx)
+
+.endc
+.end

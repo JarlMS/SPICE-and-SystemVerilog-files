@@ -1,0 +1,8 @@
+.subckt memory_cell write read ground data loop lower
+
+*	d	g	s	b	type
+m1	data	write	loop	loop	nmos
+m2	data	read	lower	lower	nmos
+m3	lower	loop	ground	ground	nmos W = 3u L = 2u
+
+.ends

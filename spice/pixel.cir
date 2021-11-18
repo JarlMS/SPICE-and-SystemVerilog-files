@@ -1,0 +1,11 @@
+.subckt pixel vrst rst exp vpx gnd out
+
+.params x=0.2u
+
+*	d	g	s	b	model
+m1	vrst	rst	out	out	nmos W=(4*x) L=x
+m2	n1	vpx	n1	n1	nmos W=(20*x) L=(1*x)
+m3	out	exp	n1	n1	nmos W=(1*x) L=(20*x)
+m4	gnd	out	gnd	gnd	nmos W=(2*x) L=(0.5*x)
+
+.ends

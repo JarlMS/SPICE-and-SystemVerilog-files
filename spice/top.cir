@@ -1,0 +1,29 @@
+.include ../../models/ptm_130_ngspice.spi
+.option TNOM=27 GMIN=1e-20
+
+v1 1 0 dc 1.2
+v2 exp 0 pulse (0 1.2 0.5u 0 0 4.5u 15u)
+v3 rst 0 pulse (0 1.2 0 0 0 0.5u 15u)
+v4 vpx 0 dc 0.7
+v5 ramp 0 pwl (0 0.73 5u 0.73 5.001u 0.5 10u 0.73 15u 0.73)
+v6 bias1 0 dc 0.57
+v7 bias2 0 dc 0.4
+v8 data 0 pwl (0 0 7.49u 0 7.5u 1.2 10u 1.2 10u 0 15u 0) 
+
+.include ./memory_cell.cir
+x1 cout 0 0 data loop lower memory_cell
+
+.include ./comparator.cir
+x2 pout ramp bias1 bias2 1 0 cout comparator
+
+.include ./pixel.cir
+x3 1 rst exp vpx 0 pout pixel
+
+.control
+
+tran 10n 15u
+
+wrdata tmp.csv v(rst) v(exp) v(pout) v(vpx) v(ramp) v(cout) v(data) v(loop)
+
+.endc
+.end

@@ -1,0 +1,22 @@
+.include ../../models/ptm_130_ngspice.spi
+
+.option tnom=27 gmin=1e-20
+
+v1 1 0 dc 1.2
+v2 input 0 dc 0.5
+v3 input_comp 0 pwl (0 0.61 5u 0.61 5u 0.41 10u 0.61 15u 0.61)
+v4 bias1 0 dc 0.57
+v5 bias2 0 dc 0.4
+
+
+.include ./comparator.cir
+x1 input input_comp bias1 bias2 1 0 output comparator
+
+.control
+
+tran 10nu 15u 
+
+wrdata tmp.csv v(input_comp) v(input) v(output)
+
+.endc
+.end

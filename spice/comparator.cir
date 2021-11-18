@@ -1,0 +1,16 @@
+.subckt comparator input1 input2 bias1 bias2 vdd vss output
+
+.params x=30n
+
+*	drain	gate	s   b   type	params
+m1	t1d 	t1d 	vdd vdd pmos	W=(100*x) L=(50*x)
+m2	t2d 	t1d 	vdd vdd pmos	W=(100*x) L=(50*x)
+m3	noninv 	t2d 	vdd vdd pmos	W=(100*x) L=(50*x)
+m4	output 	noninv 	vdd vdd pmos	W=(100*x) L=(50*x)
+m5	t1d 	input1 	t5s t5s nmos	W=(10*x) L=(5*x)
+m6	t2d 	input2 	t5s t5s nmos	W=(10*x) L=(5*x)
+m7	t5s 	bias1 	vss vss nmos	W=(10*x) L=(5*x)
+m8	noninv 	bias2 	vss vss nmos	W=(10*x) L=(5*x)
+m9	output 	noninv 	vss vss nmos	W=(10*x) L=(5*x)
+
+.ends

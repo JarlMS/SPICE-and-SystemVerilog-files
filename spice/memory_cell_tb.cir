@@ -1,0 +1,19 @@
+.include ../../models/ptm_130_ngspice.spi
+
+.option	TNOM=27	GMIN=1e-20
+
+v1 1 0 dc 1.2
+v2 write 0 pulse (0 1.2 0u 0 0 5u 100u)
+v3 read 0 pulse (0 1.2 50u 0 0 5u 100u)
+v4 data 0 pwl (0 1.2 25u 1.2 25.0001u 0 200u 0)
+
+.include ./memory_cell.cir
+x1 write read 0 data loop lower memory_cell
+
+.control
+tran 10n 200u
+
+wrdata tmp.csv v(write) v(read) v(loop) v(data)
+
+.endc
+.end

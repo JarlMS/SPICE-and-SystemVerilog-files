@@ -1,3 +1,4 @@
+//Testbench for a 2x2 pixel sensor
 `timescale 1ns/1ps
 
 module PxSensor_tb();
@@ -13,11 +14,6 @@ module PxSensor_tb();
     parameter real vpx2 = 0.5;
     parameter real vpx3 = 0.7;
     parameter real vpx4 = 0.9;
-    parameter real vpx5 = 0.4;
-    parameter real vpx6 = 0.1;
-    parameter real vpx7 = 0.55;
-    parameter real vpx8 = 0.67;
-    parameter real vpx9 = 0.3;
 
     wire logic anaClk;
     wire logic anaRamp;
@@ -32,34 +28,19 @@ module PxSensor_tb();
     tri[7:0] pxData2;
     tri[7:0] pxData3;
     tri[7:0] pxData4;
-    tri[7:0] pxData5;
-    tri[7:0] pxData6;
-    tri[7:0] pxData7;
-    tri[7:0] pxData8;
-    tri[7:0] pxData9;
     
 
     PxSensor #(.vpx(vpx1)) pixel1(anaRst, expose, anaClk, anaRamp, read, erase, pxData1);
     PxSensor #(.vpx(vpx2)) pixel2(anaRst, expose, anaClk, anaRamp, read, erase, pxData2);
     PxSensor #(.vpx(vpx3)) pixel3(anaRst, expose, anaClk, anaRamp, read, erase, pxData3);
     PxSensor #(.vpx(vpx4)) pixel4(anaRst, expose, anaClk, anaRamp, read, erase, pxData4);
-    PxSensor #(.vpx(vpx5)) pixel5(anaRst, expose, anaClk, anaRamp, read, erase, pxData5);
-    PxSensor #(.vpx(vpx6)) pixel6(anaRst, expose, anaClk, anaRamp, read, erase, pxData6);
-    PxSensor #(.vpx(vpx7)) pixel7(anaRst, expose, anaClk, anaRamp, read, erase, pxData7);
-    PxSensor #(.vpx(vpx8)) pixel8(anaRst, expose, anaClk, anaRamp, read, erase, pxData8);
-    PxSensor #(.vpx(vpx9)) pixel9(anaRst, expose, anaClk, anaRamp, read, erase, pxData9);
 
-    PxFSM #(.c_erase(5),.c_expose(255),.c_convert(255),.c_read(5),.nRows(3)) FSM(rst, clk, expose, erase, read, convert);
+	PxFSM #(.c_erase(5),.c_expose(255),.c_convert(255),.c_read(5),.nRows(2)) FSM(rst, clk, expose, erase, read, convert);
 
     logic[7:0] data1;
     logic[7:0] data2;
     logic[7:0] data3;
     logic[7:0] data4;
-    logic[7:0] data5;
-    logic[7:0] data6;
-    logic[7:0] data7;
-    logic[7:0] data8;
-    logic[7:0] data9;
 
     assign anaRamp = convert ? clk : 0;
 
@@ -69,11 +50,6 @@ module PxSensor_tb();
     assign pxData2 = read ? 8'bZ: data2;
     assign pxData3 = read ? 8'bZ: data3;
     assign pxData4 = read ? 8'bZ: data4;
-    assign pxData5 = read ? 8'bZ: data5;
-    assign pxData6 = read ? 8'bZ: data6;
-    assign pxData7 = read ? 8'bZ: data7;
-    assign pxData8 = read ? 8'bZ: data8;
-    assign pxData9 = read ? 8'bZ: data9;
 
     always @ (posedge clk or posedge rst) begin
         if(rst)begin
@@ -81,33 +57,18 @@ module PxSensor_tb();
             data2 = 0;
             data3 = 0;
             data4 = 0;
-            data5 = 0;
-            data6 = 0;
-            data7 = 0;
-            data8 = 0;
-            data9 = 0;
         end
         if(convert)begin
             data1 = data1 + 1;
             data2 = data2 + 1;
             data3 = data3 + 1;
             data4 = data4 + 1;
-            data5 = data5 + 1;
-            data6 = data6 + 1;
-            data7 = data7 + 1;
-            data8 = data8 + 1;
-            data9 = data9 + 1;
         end
         else begin
             data1 = 0;
             data2 = 0;
             data3 = 0;
-            data4 = 0;
-            data5 = 0;
-            data6 = 0;
-            data7 = 0;
-            data8 = 0;
-            data9 = 0;           
+            data4 = 0;           
         end
     end
 
@@ -115,13 +76,8 @@ module PxSensor_tb();
     logic[7:0] pxDataOut2;
     logic[7:0] pxDataOut3;
     logic[7:0] pxDataOut4;
-    logic[7:0] pxDataOut5;
-    logic[7:0] pxDataOut6;
-    logic[7:0] pxDataOut7;
-    logic[7:0] pxDataOut8;
-    logic[7:0] pxDataOut9;
     
-    reg[71:0] outBus;
+    reg[31:0] outBus;
 
     always @ (posedge clk or posedge rst) begin
         if(rst)begin
@@ -129,11 +85,6 @@ module PxSensor_tb();
             pxDataOut2 = 0;
             pxDataOut3 = 0;
             pxDataOut4 = 0;
-            pxDataOut5 = 0;
-            pxDataOut6 = 0;
-            pxDataOut7 = 0;
-            pxDataOut8 = 0;
-            pxDataOut9 = 0;
             outBus = 0;
         end
         else begin
@@ -141,19 +92,12 @@ module PxSensor_tb();
 				if(FSM.readReg == 0)begin
 					pxDataOut1 <= pxData1;
 					pxDataOut2 <= pxData2;
-					pxDataOut3 <= pxData3;
 				end
 				else if(FSM.readReg == 1)begin
+					pxDataOut3 <= pxData3;
 					pxDataOut4 <= pxData4;
-					pxDataOut5 <= pxData5;
-					pxDataOut6 <= pxData6;
 				end
-				else if(FSM.readReg == 2)begin
-					pxDataOut7 <= pxData7;
-					pxDataOut8 <= pxData8;
-					pxDataOut9 <= pxData9;
-				end
-				outBus = {pxDataOut1,pxDataOut2,pxDataOut3,pxDataOut4,pxDataOut5,pxDataOut6,pxDataOut7,pxDataOut8,pxDataOut9};
+				outBus = {pxDataOut1,pxDataOut2,pxDataOut3,pxDataOut4};
 			end
 		end
 	end

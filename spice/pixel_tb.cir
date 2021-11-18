@@ -13,7 +13,6 @@ x1 1 rst exp vpx 0 pout pixel
 .control
 
 tran 10n 30u
-plot v(rst) v(exp) v(pout) v(vpx)
 
 wrdata out.csv v(rst) v(exp) v(pout) v(vpx)
 

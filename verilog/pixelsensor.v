@@ -12,7 +12,7 @@ module PxSensor(
 real vrst = 1.2;
 parameter real vpx = 0.5;
 real lsb = 1.2/255;
-//These values mean that we have 0.7 V we can make digital using 256 steps. This gives a resolution of 0.0027V/bit
+
 
 real cmpin;
 logic cmp;
@@ -33,10 +33,10 @@ always @ (posedge CLK) begin
     if (EXPOSE) begin
         cmpin = cmpin - vpx*lsb;
     end
-    //This can be done one time for the positive edge of EXPOSE, but by doin this it simulates the real analog circuit
+    //This can be done one time for the positive edge of EXPOSE, but by doing this for each clock cycle it simulates the real analog circuit
 end
 
-//Compare value of comparator to pixel. This should work as intended
+//Compare value of comparator to pixel.
 always @ (posedge RAMP) begin
     if(adc > cmpin) begin
         cmp <= 0;
